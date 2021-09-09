@@ -1,7 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container vh-100">
     <!-- Header -->
     <div class="row header-bar">
+      <i v-if="isMobile" class="col-1 m-auto p-auto bi bi-arrow-left-circle-fill" @click="handleBackButton"></i>
       <div class="col header-bar-image-wrapper">
         <img :src="selectedUser.avatar" alt="Profile Thumbnail" />
       </div>
@@ -58,7 +59,7 @@
       </div>
       <right-content-item />
     </div>
-    <form class="input-bar-wrapper">
+    <form class="d-flex row input-bar-wrapper">
       <div class="input-group">
         <textarea
           class="form-control"
@@ -69,12 +70,17 @@
           @keyup.enter.exact="sendMessage"
           @keydown.enter.shift.exact="newline"
         />
+        <button v-if="isMobile" class="col-1" type='submit' @click.prevent="sendMessage">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
+import { EventBus } from "../../utils/EventBus"
+
 export default {
   components: {
     "right-content-item": () => import("./RightContentItem.vue"),
@@ -85,10 +91,8 @@ export default {
     };
   },
   computed: {
-    selectedUser() {
-      let data = this.$store.getters.getSelectedUsers;
-      return data;
-    },
+    isMobile() {return this.$store.getters.getIsMobile},
+    selectedUser() {return this.$store.getters.getSelectedUsers},
     isTyping: function () {
       let isTyping = this.$store.getters.isSystemTyping(this.selectedUser.id);
       return isTyping;
@@ -96,6 +100,7 @@ export default {
   },
   methods: {
     sendMessage() {
+      if (this.userInput === '') return
       this.$store.dispatch("userReply", { msg: this.userInput });
       this.userInput = "";
     },
@@ -103,14 +108,15 @@ export default {
       document.getElementById("content").scrollTop =
         document.getElementById("content").scrollHeight;
     },
+    handleBackButton() {
+      EventBus.$emit('toggleDialog');
+    }
   },
-  updated() {
-    this.scrollDown();
-  },
+  updated() {this.scrollDown()},
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h2 {
   font-size: 17px;
   margin: 0;
@@ -158,8 +164,8 @@ p {
 }
 .main-content {
   background-image: url("https://i.pinimg.com/originals/e8/d9/4e/e8d94e1e8b6b530ad315e9385290141b.jpg");
-  height: 78vh;
-  margin: auto;
+  height: 80vh;
+  margin: auto 0;
   display: flex;
   justify-content: center;
   align-content: center;
@@ -191,5 +197,9 @@ p {
   padding: 0.5rem 0.5rem;
   margin: auto;
   border-right: 1px solid #f6f6f6;
+  button {
+    border: none;
+    width: 20px;
+  }
 }
 </style>

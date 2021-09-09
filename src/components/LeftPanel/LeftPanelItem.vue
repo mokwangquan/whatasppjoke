@@ -1,5 +1,5 @@
 <template>
-  <div class="container" @click="selectUser(id)">
+  <div class="container" @click="isMobile ? openContentForMobile(id) : selectUser(id)">
     <div class="row" :class="isSelectedUser ? 'selected-user' : ''">
       <div class="col image-wrapper">
         <img :src="img" class="profile-image" alt="Profile Thumbnail" />
@@ -49,48 +49,31 @@
 </template>
 
 <script>
+import { EventBus } from "../../utils/EventBus"
 export default {
   props: {
     id: Number,
     img: String,
     name: String,
   },
-  filters: {
-    
-  },
   data: function () {
     return {};
   },
   computed: {
-    isRead() {
-      let data = this.$store.getters.getIsRead(this.id);
-      return data;
-    },
-    isSent() {
-      let data = this.$store.getters.getIsSent(this.id);
-      return data;
-    },
-    lastUpdated() {
-      let data = this.$store.getters.getLastUpdated(this.id);
-      return data;
-    },
-    lastMsg() {
-      let data = this.$store.getters.getLastMessage(this.id);
-      return data;
-    },
-    isSelectedUser() {
-      let selectedUserId = this.$store.getters.getUserIdSelected;
-      return selectedUserId === this.id;
-    },
-    isTyping() {
-      let isTyping = this.$store.getters.isSystemTyping(this.id);
-      return isTyping;
-    },
+    isMobile() {return this.$store.getters.getIsMobile},
+    isRead() {return this.$store.getters.getIsRead(this.id)},
+    isSent() {return this.$store.getters.getIsSent(this.id)},
+    lastUpdated() {return this.$store.getters.getLastUpdated(this.id)},
+    lastMsg() {return this.$store.getters.getLastMessage(this.id)},
+    isSelectedUser() {return this.id === this.$store.getters.getUserIdSelected},
+    isTyping() {return this.$store.getters.isSystemTyping(this.id)},
   },
   methods: {
-    selectUser(id) {
-      this.$store.commit("selectUser", { id: id });
-    },
+    selectUser(id) {this.$store.commit("selectUser", { id: id })},
+    openContentForMobile(id) {
+      this.selectUser(id)
+      EventBus.$emit('toggleDialog');
+    }
   },
 };
 </script>

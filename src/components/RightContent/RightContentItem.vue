@@ -64,7 +64,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 p {
   margin: 0;
 }
@@ -99,6 +99,14 @@ p {
 .system-input {
   margin-left: 82px;
   background-color: white;
+}
+@media screen and (max-width: 800px) {
+  .user-input {
+    margin-right: 10px;
+  }
+  .system-input {
+    margin-left: 10px;
+  }
 }
 .text-date {
   margin: auto;
