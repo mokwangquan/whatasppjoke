@@ -1,0 +1,25 @@
+.custom-icon{
+  height: 40px;
+  width: 40px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.story-icon {
+  background-image: url('../icons/story.svg');
+}
+.message-icon {
+  background-image: url('../icons/message.svg');
+}
+.menu-icon {
+  background-image: url('../icons/menu.svg');
+}
+.magnify-glass-icon {
+  background-image: url('../icons/magnify-glass.svg');
+}
+.double-tick-icon {
+  background-image: url('../icons/double-tick.svg');
+}
+.single-tick-icon {
+  background-image: url('../icons/single-tick.svg');
+}
